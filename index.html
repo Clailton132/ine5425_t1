@@ -16,8 +16,13 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <!-- Lib JS Bootstrap -->
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <!-- Lib JS Mask-->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.12/jquery.mask.js"></script>
     <!-- JS index -->
-    <script src="js/index.js"></script>
+    <script src="js/controllerGUI.js"></script>
+    <script src="js/startSimulacao.js"></script>
+    <script src="js/distribuicao.js"></script>
+
 
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -54,8 +59,8 @@
         <div class="col-md-12 panel panel-default" id="new-modelo ">
             <div class="row">
                 <form>
-                    <div class="form-group col-md-4">
-                        <label for="valor-tce">Valor TCE:</label>
+                    <div class="form-group col-md-3">
+                        <label for="valor-tce">TCE Entidades:</label><em> 50% </em>
                         <select class="form-control" id="valor-tce">
                             <option value="default"     >Escolha um valor</option>
                             <option value="constante"   >Constante</option>
@@ -66,13 +71,30 @@
                         </select>
                         <br>
                         <div class="form-group input-tce">
-                            <input class="form-control" id="input-tce" type="number">
+                            <input class="form-control" id="input-tce" type="text">
                         </div>
                     </div>
                 </form>
-                    <div class="form-group col-md-4">
-                        <label for="valor-ts">Valor TS:</label>
-                        <select class="form-control" id="valor-ts">
+                <div class="form-group col-md-3">
+                    <label for="valor-ts">TS dos Servidores:</label>
+                    <select class="form-control" id="valor-ts">
+                        <option value="default"     >Escolha um valor</option>
+                        <option value="constante"   >Constante</option>
+                        <option value="normal"      >Normal</option>
+                        <option value="uniforme"    >Uniforme</option>
+                        <option value="triangular"  >Triangular</option>
+                        <option value="exponencial" >Exponencial</option>
+                    </select>
+                    <br>
+                    <div class="form-group input-ts">
+                        <input class="form-control" id="input-ts" type="text">
+                    </div>
+                </div>
+                </form>
+                <form>
+                    <div class="form-group col-md-3">
+                        <label for="tempo-falha">T. entre Falha Equipamentos (TEF):</label>
+                        <select class="form-control" id="tempo-falha">
                             <option value="default"     >Escolha um valor</option>
                             <option value="constante"   >Constante</option>
                             <option value="normal"      >Normal</option>
@@ -81,14 +103,14 @@
                             <option value="exponencial" >Exponencial</option>
                         </select>
                         <br>
-                        <div class="form-group input-ts">
-                            <input class="form-control" id="input-ts" type="number">
+                        <div class="form-group input-tfalha">
+                            <input class="form-control" id="input-tfalha" type="text">
                         </div>
                     </div>
                 </form>
                 <form>
-                    <div class="form-group col-md-4">
-                        <label for="valor-falha">Valor Falha:</label>
+                    <div class="form-group col-md-3">
+                        <label for="valor-falha">Duração Falha (TF):</label>
                         <select class="form-control" id="valor-falha">
                             <option value="default"     >Escolha um valor</option>
                             <option value="constante"   >Constante</option>
@@ -99,12 +121,20 @@
                         </select>
                         <br>
                         <div class="form-group input-falha">
-                            <input class="form-control" id="input-falha" type="number">
+                            <input class="form-control" id="input-falha" type="text">
                         </div>
                     </div>
                 </form>
             </div>
+            <hr>
+            <button type="button" class="btn btn-primary margin-bt" id="start">Gerar Simulação</button>
+            <br>
+            <img class="loader margin-bt" id="img-loader"></img>
         </div>
+    </div>
+    <br>
+    <div class="starter-template">
+        <h2>Gráficos</h2>
     </div>
 </div>
 </body>
