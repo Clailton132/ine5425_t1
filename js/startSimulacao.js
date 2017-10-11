@@ -8,17 +8,42 @@ $(document).ready(function(){
         gerarEntidades();
     });
     
+    //TODO para testes, o tempo de simulão foi FIXADO em 24h (1440 minutos)
+    var timer = 1440;
+
     function gerarEntidades(){
 
         if(verificaInputs()){
-            var tipoTCE = $("#input-tce");
-            var tipoDistribuicao = $('#valor-tce');
-            var tce = gerarDistribuicao(tipoTCE, tipoDistribuicao[0].value);
-            console.log(tce);
+            geradorEntidades();
         } else {
             alert("Preencha todos os campos!")
         }
 
+    }
+
+    function geradorEntidades() {
+
+        var tipoTCE = $("#input-tce");
+        var tipoDistribuicao = $('#valor-tce');
+        var tce = 0;
+        var entidade_1 = [];
+        var entidade_2 = [];
+
+        while ((timer - tce) >= 0){
+            tce = gerarDistribuicao(tipoTCE, tipoDistribuicao[0].value);
+
+            if(Math.round(Math.random()*10) <= 5){
+                entidade_1.push(new Entidade(tce, "e1", "vermelho"));
+                timer = timer - tce;
+            } else {
+                entidade_2.push(new Entidade(tce, "e2", "verde"));
+                timer = timer - tce;
+            }    
+        }
+
+        console.log(entidade_1);
+        console.log(entidade_2);
+        
     }
 
     function gerarDistribuicao(valores, tipo){
@@ -56,9 +81,11 @@ $(document).ready(function(){
                 return "erro";
         }
     }
-    function entidade(){
-        this.tipoEntidade = tipo;
-        this.TCE = tce
+
+    function Entidade(tce, tipo, cor) {
+        this.tce = tce;
+        this.tipo = tipo;
+        this.cor = cor;
     }
 
     function verificaInputs() {

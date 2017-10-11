@@ -105,4 +105,8 @@ $(document).ready(function(){
                 return "erro";
         }
     }
+
+    $('#reload').click(function(){
+        location.reload();
+    });
 });
