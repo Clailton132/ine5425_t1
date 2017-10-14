@@ -87,19 +87,19 @@ $(document).ready(function(){
 
         switch(valor) {
             case "constante":
-                return ["Constante 0-99", "ZZ"];
+                return ["Constante 0-99", "ZZZ"];
                 break;
             case "normal":
-                return ["Média, DP", "ZZ,ZZ"];
+                return ["Média, DP", "ZZZ,ZZZ"];
                 break;
             case "uniforme":
-                return ["Min, Máx", "ZZ,ZZ"];
+                return ["Min, Máx", "ZZZ,ZZZ"];
                 break;
             case "triangular":
-                return ["Min, Moda, Máx", "ZZ,ZZ,ZZ"];
+                return ["Min, Moda, Máx", "ZZZ,ZZZ,ZZZ"];
                 break;
             case "exponencial":
-                return ["Média", "ZZ"];
+                return ["Média", "ZZZ"];
                 break;
             default:
                 return "erro";

@@ -18,10 +18,14 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
     <!-- Lib JS Mask-->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.12/jquery.mask.js"></script>
+    <!-- Lib DataTable-->
+    <link rel="stylesheet" href="//cdn.datatables.net/1.10.16/css/jquery.dataTables.min.css">
+    <script src="//cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
     <!-- JS index -->
     <script src="js/controllerGUI.js"></script>
     <script src="js/startSimulacao.js"></script>
     <script src="js/distribuicao.js"></script>
+    <script src="js/geradorTabela.js"></script>
 
 
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
@@ -133,6 +137,11 @@
         </div>
     </div>
     <br>
+    <div class="starter-template">
+        <h2>Tabela de Simulação</h2>
+        <table cellpadding="0" cellspacing="0" border="0" class="display" id="tabelaSimulacao"></table>
+    </div>
+    <hr>
     <div class="starter-template">
         <h2>Gráficos</h2>
     </div>

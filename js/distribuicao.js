@@ -5,9 +5,10 @@
 $(document).ready(function(){
 
 });
-function constante() {
-
-    return Math.round(Math.random());
+function constante(a) {
+    //TODO Usar a constante passada como parametro?
+    return a;
+    //return Math.round(Math.random());
 }
 
 function uniforne(a, b){
