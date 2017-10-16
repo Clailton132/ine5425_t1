@@ -39,52 +39,58 @@ $(document).ready(function(){
         var tipoTCE = $("#input-tce");
         var tipoDistribuicao = $('#valor-tce');
         var tec = 0;
-        var ts = 0;
         var tempoFila = 0;
         var tempoNoSistema = 0;
-        var tempoExecucao = 0;
         var tempoSaida = 0;
-        var entidade_1 = [];
-        var entidade_2 = [];
         var listaEventos = [];
         var tempoRelogio = 0;
+
+        //Variáveis Equipamento 1
+        var ts_e1 = 0;
+        var tempoExecucao_e1 = 0;
+
+        //Variaveis Equipament 2
+        var ts_e2 = 0;
+        var tempoExecucao_e2 = 0;
+
+
 
         while (tempoRelogio <= timer){
             tec = gerarDistribuicao(tipoTCE, tipoDistribuicao[0].value);
 
             if(Math.round(Math.random()*10) <= 5){
-                if(ts > 0) {
-                    ts = geradorTServico();
-                    tempoFila = tempoExecucao - tempoRelogio;
+                if(ts_e1 > 0) {
+                    ts_e1 = Number(geradorTServico());
+                    tempoFila = tempoExecucao_e1 - tempoRelogio;
                     if(tempoFila <= 0){
                         tempoFila = 0;
                     }
                 } else {
-                    ts = geradorTServico();
+                    ts_e1 = Number(geradorTServico());
                 }
 
                 tempoRelogio = tempoRelogio + tec;
-                tempoExecucao = ts + tempoFila;
-                tempoSaida = tempoRelogio + ts + tempoFila;
-                listaEventos.push(new Evento(new Entidade(tec, "e1",tempoExecucao), 0+tempoRelogio));
+                tempoExecucao_e1 = ts_e1 + tempoFila;
+                tempoSaida = tempoRelogio + ts_e1 + tempoFila;
+                listaEventos.push(new Evento(new Entidade(tec, "e1",tempoExecucao_e1), 0+tempoRelogio));
 
 
             } else {
-                    if(ts > 0) {
-                        ts = geradorTServico();
-                        tempoFila = tempoExecucao - tempoRelogio;
+                    if(ts_e2 > 0) {
+                        ts_e2 = Number(geradorTServico());
+                        tempoFila = tempoExecucao_e2 - tempoRelogio;
                         if(tempoFila <= 0){
                             tempoFila = 0;
                         }
                     } else {
-                        ts = geradorTServico();
+                        ts_e2 = Number(geradorTServico());
                     }
 
                     tempoRelogio = tempoRelogio + tec;
-                    tempoExecucao = ts + tempoFila;
-                    tempoSaida = tempoRelogio + ts + tempoFila;
+                    tempoExecucao_e2 = ts_e2 + tempoFila;
+                    tempoSaida = tempoRelogio + ts_e2 + tempoFila;
 
-                listaEventos.push(new Evento(new Entidade(tec, "e2",tempoNoSistema), 0+tempoRelogio));
+                listaEventos.push(new Evento(new Entidade(tec, "e2",tempoExecucao_e2), 0+tempoRelogio));
 
 
             }    
