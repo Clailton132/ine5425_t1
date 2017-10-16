@@ -4,84 +4,93 @@
 
 $(document).ready(function(){
 
-    $('.input-tce').hide();
-    $('.input-ts').hide();
-    $('.input-falha').hide();
-    $('.input-tfalha').hide();
+
+// $('.input-tce').hide();
+    // $('.input-ts').hide();
+    // $('.input-falha').hide();
+    // $('.input-tfalha').hide();
+
     $('#img-loader').hide();
 
-    $('#valor-tce').change(function(){
-        var tipoTCE = this.value;
-        if(tipoTCE != "default"){
-            var atributos =  getAtributosInput(tipoTCE);
-            $("#input-tce").attr("placeholder", atributos[0]);
-            $("#input-tce").mask(atributos[1], {
-                translation: {
-                    'Z': {
-                        pattern: /[0-9]/, optional: true
-                    }
-                }
-            });
-            $('.input-tce').show();
-        } else {
-            $('.input-tce').hide();
-        }
-    });
+    $('#valor-tce').val('uniforme');
+    $('#input-tce').val('12,14');
+    // $('#valor-tce').change(function(){
+    //     var tipoTCE = this.value;
+    //     if(tipoTCE != "default"){
+    //         var atributos =  getAtributosInput(tipoTCE);
+    //         $("#input-tce").attr("placeholder", atributos[0]);
+    //         $("#input-tce").mask(atributos[1], {
+    //             translation: {
+    //                 'Z': {
+    //                     pattern: /[0-9]/, optional: true
+    //                 }
+    //             }
+    //         });
+    //         $('.input-tce').show();
+    //     } else {
+    //         $('.input-tce').hide();
+    //     }
+    // });
 
-    $('#valor-ts').change(function(){
-        var tipoTS = this.value;
-        if(tipoTS != "default"){
-            var atributos =  getAtributosInput(tipoTS);
-            $("#input-ts").attr("placeholder", atributos[0]);
-            $("#input-ts").mask(atributos[1], {
-                translation: {
-                    'Z': {
-                        pattern: /[0-9]/, optional: true
-                    }
-                }
-            });
-            $('.input-ts').show();
-        } else {
-            $('.input-ts').hide();
-        }
-    });
+    $('#valor-ts').val('constante');
+    $('#input-ts').val('10');
+    // $('#valor-ts').change(function(){
+    //     var tipoTS = this.value;
+    //     if(tipoTS != "default"){
+    //         var atributos =  getAtributosInput(tipoTS);
+    //         $("#input-ts").attr("placeholder", atributos[0]);
+    //         $("#input-ts").mask(atributos[1], {
+    //             translation: {
+    //                 'Z': {
+    //                     pattern: /[0-9]/, optional: true
+    //                 }
+    //             }
+    //         });
+    //         $('.input-ts').show();
+    //     } else {
+    //         $('.input-ts').hide();
+    //     }
+    // });
 
-    $('#tempo-falha').change(function(){
-        var tipoTFalha = this.value;
-        if(tipoTFalha != "default"){
-            var atributos =  getAtributosInput(tipoTFalha);
-            $("#input-tfalha").attr("placeholder", atributos[0]);
-            $("#input-tfalha").mask(atributos[1], {
-                translation: {
-                    'Z': {
-                        pattern: /[0-9]/, optional: true
-                    }
-                }
-            });
-            $('.input-tfalha').show();
-        } else {
-            $('.input-tfalha').hide();
-        }
-    });
+    $('#tempo-falha').val('constante');
+    $('#input-tfalha').val('10');
+    // $('#tempo-falha').change(function(){
+    //     var tipoTFalha = this.value;
+    //     if(tipoTFalha != "default"){
+    //         var atributos =  getAtributosInput(tipoTFalha);
+    //         $("#input-tfalha").attr("placeholder", atributos[0]);
+    //         $("#input-tfalha").mask(atributos[1], {
+    //             translation: {
+    //                 'Z': {
+    //                     pattern: /[0-9]/, optional: true
+    //                 }
+    //             }
+    //         });
+    //         $('.input-tfalha').show();
+    //     } else {
+    //         $('.input-tfalha').hide();
+    //     }
+    // });
 
-    $('#valor-falha').change(function(){
-        var tipoFalha = this.value;
-        if(tipoFalha != "default"){
-            var atributos =  getAtributosInput(tipoFalha);
-            $("#input-falha").attr("placeholder",atributos[0]);
-            $("#input-falha").mask(atributos[1  ], {
-                translation: {
-                    'Z': {
-                        pattern: /[0-9]/, optional: true
-                    }
-                }
-            });
-            $('.input-falha').show();
-        } else {
-            $('.input-falha').hide();
-        }
-    });
-
+    $('#valor-falha').val('constante');
+    $('#input-falha').val('10');
+    // $('#valor-falha').change(function(){
+    //     var tipoFalha = this.value;
+    //     if(tipoFalha != "default"){
+    //         var atributos =  getAtributosInput(tipoFalha);
+    //         $("#input-falha").attr("placeholder",atributos[0]);
+    //         $("#input-falha").mask(atributos[1  ], {
+    //             translation: {
+    //                 'Z': {
+    //                     pattern: /[0-9]/, optional: true
+    //                 }
+    //             }
+    //         });
+    //         $('.input-falha').show();
+    //     } else {
+    //         $('.input-falha').hide();
+    //     }
+    // });
 
     function getAtributosInput(valor){
 

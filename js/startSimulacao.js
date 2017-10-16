@@ -38,39 +38,71 @@ $(document).ready(function(){
 
         var tipoTCE = $("#input-tce");
         var tipoDistribuicao = $('#valor-tce');
-        var tce = 0;
+        var tec = 0;
+        var ts = 0;
+        var tempoFila = 0;
+        var tempoNoSistema = 0;
+        var tempoExecucao = 0;
+        var tempoSaida = 0;
         var entidade_1 = [];
         var entidade_2 = [];
+        var listaEventos = [];
+        var tempoRelogio = 0;
 
-        while ((timer - tce) >= 0){
-            tce = gerarDistribuicao(tipoTCE, tipoDistribuicao[0].value);
+        while (tempoRelogio <= timer){
+            tec = gerarDistribuicao(tipoTCE, tipoDistribuicao[0].value);
 
             if(Math.round(Math.random()*10) <= 5){
-                entidade_1.push(new Entidade(tce, "e1", "vermelho"));
-                timer = timer - tce;
+                if(ts > 0) {
+                    ts = geradorTServico();
+                    tempoFila = tempoExecucao - tempoRelogio;
+                    if(tempoFila <= 0){
+                        tempoFila = 0;
+                    }
+                } else {
+                    ts = geradorTServico();
+                }
+
+                tempoRelogio = tempoRelogio + tec;
+                tempoExecucao = ts + tempoFila;
+                tempoSaida = tempoRelogio + ts + tempoFila;
+                listaEventos.push(new Evento(new Entidade(tec, "e1",tempoExecucao), 0+tempoRelogio));
+
+
             } else {
-                entidade_2.push(new Entidade(tce, "e2", "verde"));
-                timer = timer - tce;
+                    if(ts > 0) {
+                        ts = geradorTServico();
+                        tempoFila = tempoExecucao - tempoRelogio;
+                        if(tempoFila <= 0){
+                            tempoFila = 0;
+                        }
+                    } else {
+                        ts = geradorTServico();
+                    }
+
+                    tempoRelogio = tempoRelogio + tec;
+                    tempoExecucao = ts + tempoFila;
+                    tempoSaida = tempoRelogio + ts + tempoFila;
+
+                listaEventos.push(new Evento(new Entidade(tec, "e2",tempoNoSistema), 0+tempoRelogio));
+
+
             }    
         }
 
-        console.log(entidade_1);
-        console.log(entidade_2);
-        return [entidade_1, entidade_2];
+        console.log(listaEventos);
+
+        while(tempoRelogio <= timer){
+            tef = geradorTempoEntreFalha();
+        }
+
     }
 
-    function geradorTServico(timer){
+    function geradorTServico(){
         var tipoTS = $("#input-ts");
         var tipoDistribuicao = $('#valor-ts');
-        var ts = 0;
-        var tsEquipamento= [];
 
-        while ((timer - ts) >= 0){
-            ts = gerarDistribuicao(tipoTS, tipoDistribuicao[0].value);
-            tsEquipamento.push(ts);
-            timer = timer - ts;
-        }
-        return tsEquipamento;
+        return gerarDistribuicao(tipoTS, tipoDistribuicao[0].value);
     }
 
     function geradorTempoEntreFalha(timer){
@@ -136,20 +168,7 @@ $(document).ready(function(){
                 return "erro";
         }
     }
-
-    function Entidade(tce, tipo, cor) {
-        this.tce = tce;
-        this.tipo = tipo;
-        this.cor = cor;
-    }
-
-    function Equipamento(ts, tempoEntreFalha, duracaoFalha, fila) {
-        this.ts = ts;
-        this.tempoEntreFalha = tempoEntreFalha;
-        this.duracaoFalha = duracaoFalha;
-        this.fila = fila;
-    }
-
+    
     function verificaInputs() {
         return true;
         /*return !($('#input-tce').val() == '' ||
