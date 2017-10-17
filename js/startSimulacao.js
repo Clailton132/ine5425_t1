@@ -29,9 +29,6 @@ $(document).ready(function(){
         } else {
             alert("Preencha todos os campos!")
         }
-
-        console.log(equipamento_1);
-        console.log(equipamento_2);
     }
 
     function geradorEntidades(timer) {
@@ -48,60 +45,119 @@ $(document).ready(function(){
         //Variáveis Equipamento 1
         var ts_e1 = 0;
         var tempoExecucao_e1 = 0;
+        var listaEventoFalha_e1 = geradorTempoEntreFalha(timer, "e1");
+        //Iterador da lista de eventos de Falha do equipamento 1
+        var iteradorListFalha_e1 = 0;
+        //Contador de entidades descartadas
+        var entidadeDescartadas_1 = 0;
+        //Contador de entidades tipo 2 que são atentidas pelo equipamento 1
+        var contadorEntidade2 = 0;
 
         //Variaveis Equipament 2
         var ts_e2 = 0;
         var tempoExecucao_e2 = 0;
-
-
+        var listaEventoFalha_e2 = geradorTempoEntreFalha(timer, "e2");
+        //Iterador da lista de eventos de Falha do equipamento 2
+        var iteradorListFalha_e2 = 0;
+        //Contador de entidades descartadas
+        var entidadeDescartadas_2 = 0;
+        //Contador de entidades tipo 1 que são atentidas pelo equipamento 2
+        var contadorEntidade1 = 0;
 
         while (tempoRelogio <= timer){
             tec = gerarDistribuicao(tipoTCE, tipoDistribuicao[0].value);
+            //Atualiza Evento de falha atual
+            listaEventoFalha_e1[iteradorListFalha_e1].estado =
+                atualizaEventoFalha(listaEventoFalha_e1[iteradorListFalha_e1], tempoRelogio);
+            listaEventoFalha_e2[iteradorListFalha_e2].estado =
+                atualizaEventoFalha(listaEventoFalha_e2[iteradorListFalha_e2], tempoRelogio);
 
             if(Math.round(Math.random()*10) <= 5){
-                if(ts_e1 > 0) {
-                    ts_e1 = Number(geradorTServico());
-                    tempoFila = tempoExecucao_e1 - tempoRelogio;
-                    if(tempoFila <= 0){
-                        tempoFila = 0;
+                //Evento Equipamento 1
+                if(listaEventoFalha_e1[iteradorListFalha_e1].estado == "falha") {
+                    if(listaEventoFalha_e2[iteradorListFalha_e2].estado == "falha"){
+                        console.log("Entidade 1 Descartada");
+                        entidadeDescartadas_1++;
+                        tempoRelogio = tempoRelogio + tec;
+                    } else {
+                        equipamentoE2("e1");
                     }
                 } else {
-                    ts_e1 = Number(geradorTServico());
+                    equipamentoE1("e1");
                 }
-
-                tempoRelogio = tempoRelogio + tec;
-                tempoExecucao_e1 = ts_e1 + tempoFila;
-                tempoSaida = tempoRelogio + ts_e1 + tempoFila;
-                listaEventos.push(new Evento(new Entidade(tec, "e1",tempoExecucao_e1), 0+tempoRelogio));
-
-
             } else {
-                    if(ts_e2 > 0) {
-                        ts_e2 = Number(geradorTServico());
-                        tempoFila = tempoExecucao_e2 - tempoRelogio;
-                        if(tempoFila <= 0){
-                            tempoFila = 0;
-                        }
+                //Evento Equipamento 2
+                if(listaEventoFalha_e2[iteradorListFalha_e2].estado == "falha") {
+                    if(listaEventoFalha_e1[iteradorListFalha_e1].estado == "falha"){
+                        console.log("Entidade 2 Descartada");
+                        entidadeDescartadas_2++;
+                        tempoRelogio = tempoRelogio + tec;
                     } else {
-                        ts_e2 = Number(geradorTServico());
+                        equipamentoE1("e2");
                     }
+                } else {
+                   equipamentoE2("e2");
+                }
+            }
 
-                    tempoRelogio = tempoRelogio + tec;
-                    tempoExecucao_e2 = ts_e2 + tempoFila;
-                    tempoSaida = tempoRelogio + ts_e2 + tempoFila;
+            if(listaEventoFalha_e1[iteradorListFalha_e1].fimFalha <= tempoRelogio){
+                iteradorListFalha_e1++;
+            }
+            if(listaEventoFalha_e2[iteradorListFalha_e2].fimFalha <= tempoRelogio){
+                iteradorListFalha_e2++;
+            }
+        }
+        function equipamentoE1(entidade){
+            if(entidade == "e2"){
+                contadorEntidade2++;
+            }
 
-                listaEventos.push(new Evento(new Entidade(tec, "e2",tempoExecucao_e2), 0+tempoRelogio));
+            if (ts_e1 > 0) {
+                ts_e1 = Number(geradorTServico());
+                tempoFila = tempoExecucao_e1 - tempoRelogio;
+                if (tempoFila <= 0) {
+                    tempoFila = 0;
+                }
+            } else {
+                ts_e1 = Number(geradorTServico());
+            }
 
-
-            }    
+            tempoRelogio = tempoRelogio + tec;
+            tempoExecucao_e1 = ts_e1 + tempoFila;
+            tempoSaida = tempoRelogio + ts_e1 + tempoFila;
+            listaEventos.push(new Evento(new Entidade(tec, entidade, tempoExecucao_e1), 0 + tempoRelogio));
         }
 
-        console.log(listaEventos);
+        function equipamentoE2(entidade){
+            if(entidade == "e1"){
+                contadorEntidade1++;
+            }
 
-        while(tempoRelogio <= timer){
-            tef = geradorTempoEntreFalha();
+            if (ts_e2 > 0) {
+                ts_e2 = Number(geradorTServico());
+                tempoFila = tempoExecucao_e2 - tempoRelogio;
+                if (tempoFila <= 0) {
+                    tempoFila = 0;
+                }
+            } else {
+                ts_e2 = Number(geradorTServico());
+            }
+
+            tempoRelogio = tempoRelogio + tec;
+            tempoExecucao_e2 = ts_e2 + tempoFila;
+            tempoSaida = tempoRelogio + ts_e2 + tempoFila;
+            listaEventos.push(new Evento(new Entidade(tec, entidade,tempoExecucao_e2), 0+tempoRelogio));
+
         }
+    }
 
+    function atualizaEventoFalha(Equipamento, tempoRelogio){
+        if(tempoRelogio >= Equipamento.inicioFalha &&
+            tempoRelogio <= Equipamento.fimFalha){
+            return "falha";
+        } else {
+            return "ativo";
+        }
     }
 
     function geradorTServico(){
@@ -111,32 +167,30 @@ $(document).ready(function(){
         return gerarDistribuicao(tipoTS, tipoDistribuicao[0].value);
     }
 
-    function geradorTempoEntreFalha(timer){
+    function geradorTempoEntreFalha(timer, equipamento){
         var tipoTFalha = $("#input-tfalha");
         var tipoDistribuicao = $('#tempo-falha');
-        var df = 0;
+        
+        var falhaNoTempo = 0;
+        var duracaoFalha = 0;
+        var fimEventoFalha = 0;
         var tempoEntreFalhas= [];
 
-        while ((timer - df) >= 0){
-            df = gerarDistribuicao(tipoTFalha, tipoDistribuicao[0].value);
-            tempoEntreFalhas.push(df);
-            timer = timer - df;
+        while ((timer - falhaNoTempo) >= 0){
+            falhaNoTempo = falhaNoTempo + Number(gerarDistribuicao(tipoTFalha, tipoDistribuicao[0].value));
+            duracaoFalha = Number(geradorDuracaoFalha());
+            fimEventoFalha = falhaNoTempo + duracaoFalha;
+            tempoEntreFalhas.push(new Falha(equipamento, falhaNoTempo, fimEventoFalha, "ativo"));
+            falhaNoTempo = fimEventoFalha;
         }
         return tempoEntreFalhas;
     }
 
-    function geradorDuracaoFalha(timer) {
+    function geradorDuracaoFalha() {
         var tipoDFalha = $("#input-falha");
         var tipoDistribuicao = $('#valor-falha');
-        var tf = 0;
-        var DuracaoFalhas= [];
 
-        while ((timer - tf) >= 0){
-            tf = gerarDistribuicao(tipoDFalha, tipoDistribuicao[0].value);
-            DuracaoFalhas.push(tf);
-            timer = timer - tf;
-        }
-        return DuracaoFalhas;
+        return gerarDistribuicao(tipoDFalha, tipoDistribuicao[0].value);
     }
 
     function gerarDistribuicao(valores, tipo){
