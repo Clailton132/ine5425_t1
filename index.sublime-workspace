@@ -74,9 +74,12 @@
 		"side_bar_visible": false,
 		"status_bar_visible": false
 	},
+	"expanded_folders":
+	[
+		"/home/clailton_francisco/Documentos/projMoldSim/ine5425_t1"
+	],
 	"file_history":
 	[
-		"/home/clailton_francisco/Documentos/projMoldSim/ine5425_t1/css/index.sublime-project",
 		"/home/clailton_francisco/Documentos/projMoldSim/ine5425_t1/index.html",
 		"/home/clailton_francisco/Documentos/projMoldSim/ine5425_t1/css/index.css",
 		"/teste/log_agendamento",

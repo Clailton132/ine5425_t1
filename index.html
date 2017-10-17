@@ -136,20 +136,34 @@
                 </form>
             </div>
             <hr>
+            <div>
+                <h3>Informe a duração da simulação <small>(Em horas)</small>:</h3>
+                <input class="input-duracao" id="duracao-simulacao" type="text" placeholder="Duracao máxima 999 horas">
+            </div>
+            <hr>
             <button type="button" class="btn btn-primary margin-bt" id="start">Gerar Simulação</button>
+            <button type="button" class="btn btn-danger margin-bt" id="stop">Parar Simulação</button>
             <br>
             <img class="loader margin-bt" id="img-loader"></img>
         </div>
     </div>
     <br>
-    <div class="starter-template">
-        <h2>Tabela de Simulação</h2>
-        <table cellpadding="0" cellspacing="0" border="0" class="display" id="tabelaSimulacao"></table>
+    <ul class="nav nav-tabs">
+        <li class="active"><a data-toggle="tab" href="#aba-tabelas">Tabelas de Simulação</a></li>
+        <li><a data-toggle="tab" href="#aba-graficos">Grágicos</a></li>
+    </ul>
+
+    <div class="tab-content">
+        <div id="aba-tabelas" class="starter-template tab-pane fade in active">
+            <h2>Tabela de Simulação Equipamento 1</h2>
+            <table cellpadding="0" cellspacing="0" border="0" class="display" id="tabelaSimulacao_e1"></table>
+            <hr>
+            <h2>Tabela de Simulação Equipamento 2</h2>
+            <table cellpadding="0" cellspacing="0" border="0" class="display" id="tabelaSimulacao_e2"></table>
+        </div>
+        <div id="aba-graficos" class="starter-template tab-pane fade">
+            <h2>Gráficos</h2>
+        </div>
     </div>
-    <hr>
-    <div class="starter-template">
-        <h2>Gráficos</h2>
-    </div>
-</div>
 </body>
 </html>

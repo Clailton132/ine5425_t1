@@ -4,17 +4,14 @@
 
 $(document).ready(function(){
     
-    //TODO habilitar testes
-    var teste = true;
-    
     $('#start').click(function(){
-        gerarTabela();
-        gerarEntidades();
+    	var timer = Number($("#duracao-simulacao").val()) * 60;
+    	gerarEntidades(timer);
     });
 
-    function gerarEntidades(){
+    function gerarEntidades(timer){
         //TODO para testes, o tempo de simulão foi FIXADO em 24h (1440 minutos)
-        var timer = 1440;
+        //var timer = 1440;
         var entidades;
         var equipamento_1;
         var equipamento_2;
@@ -35,6 +32,8 @@ $(document).ready(function(){
 
         var tipoTCE = $("#input-tce");
         var tipoDistribuicao = $('#valor-tce');
+        $('#img-loader').show();
+
         var tec = 0;
         var tempoFila = 0;
         var tempoNoSistema = 0;
@@ -52,6 +51,8 @@ $(document).ready(function(){
         var entidadeDescartadas_1 = 0;
         //Contador de entidades tipo 2 que são atentidas pelo equipamento 1
         var contadorEntidade2 = 0;
+        var tempoLivre_e1 = 0;
+        var listaEventos_e1 = [];
 
         //Variaveis Equipament 2
         var ts_e2 = 0;
@@ -63,6 +64,8 @@ $(document).ready(function(){
         var entidadeDescartadas_2 = 0;
         //Contador de entidades tipo 1 que são atentidas pelo equipamento 2
         var contadorEntidade1 = 0;
+        var tempoLivre_e2 = 0;
+        var listaEventos_e2 = [];
 
         while (tempoRelogio <= timer){
             tec = gerarDistribuicao(tipoTCE, tipoDistribuicao[0].value);
@@ -107,6 +110,7 @@ $(document).ready(function(){
                 iteradorListFalha_e2++;
             }
         }
+
         function equipamentoE1(entidade){
             if(entidade == "e2"){
                 contadorEntidade2++;
@@ -115,17 +119,21 @@ $(document).ready(function(){
             if (ts_e1 > 0) {
                 ts_e1 = Number(geradorTServico());
                 tempoFila = tempoExecucao_e1 - tempoRelogio;
+                tempoLivre_e1 = 0;
                 if (tempoFila <= 0) {
+                    tempoLivre_e1 = tempoFila *-1;
                     tempoFila = 0;
                 }
             } else {
                 ts_e1 = Number(geradorTServico());
+                tempoLivre_e1 = tempoRelogio + tec;
             }
 
             tempoRelogio = tempoRelogio + tec;
             tempoExecucao_e1 = ts_e1 + tempoFila;
             tempoSaida = tempoRelogio + ts_e1 + tempoFila;
-            listaEventos.push(new Evento(new Entidade(tec, entidade, tempoExecucao_e1), 0 + tempoRelogio));
+
+            listaEventos_e1.push([entidade, tec, tempoRelogio, ts_e1, tempoFila, tempoExecucao_e1, tempoLivre_e1]);
         }
 
         function equipamentoE2(entidade){
@@ -136,19 +144,27 @@ $(document).ready(function(){
             if (ts_e2 > 0) {
                 ts_e2 = Number(geradorTServico());
                 tempoFila = tempoExecucao_e2 - tempoRelogio;
+                tempoLivre_e2 = 0;
                 if (tempoFila <= 0) {
+                     tempoLivre_e2 = tempoFila *-1;
                     tempoFila = 0;
                 }
             } else {
                 ts_e2 = Number(geradorTServico());
+                tempoLivre_e2 = tempoRelogio + tec;
             }
 
             tempoRelogio = tempoRelogio + tec;
             tempoExecucao_e2 = ts_e2 + tempoFila;
             tempoSaida = tempoRelogio + ts_e2 + tempoFila;
-            listaEventos.push(new Evento(new Entidade(tec, entidade,tempoExecucao_e2), 0+tempoRelogio));
+            //listaEventos.push(new Evento(new Entidade(tec, entidade,tempoExecucao_e2), 0+tempoRelogio));
+            listaEventos_e2.push([entidade, tec, tempoRelogio, ts_e2, tempoFila, tempoExecucao_e2, tempoLivre_e2]);
 
         }
+
+        gerarTabelaEquipamento1(listaEventos_e1);
+        gerarTabelaEquipamento2(listaEventos_e2);
+        $('#img-loader').hide();
     }
 
     function atualizaEventoFalha(Equipamento, tempoRelogio){
@@ -234,6 +250,7 @@ $(document).ready(function(){
         /*return !($('#input-tce').val() == '' ||
         $('#input-ts').val() == '' ||
         $('#input-tfalha').val() == '' ||
-        $('#input-falha').val() == '');*/
+        $('#input-falha').val() == '' ||
+        $('#duracao-simulacao').val() == '');*/
     }
 });

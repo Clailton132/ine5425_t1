@@ -2,6 +2,9 @@
  * Created by Clailton on 04/10/2017.
  */
 
+//Variável global no sistema q para a simulção;
+ stopSimulacao = false;
+
 $(document).ready(function(){
 
 
@@ -114,6 +117,18 @@ $(document).ready(function(){
                 return "erro";
         }
     }
+
+    $('#duracao-simulacao').mask("ZZZ", {
+                translation: {
+                    'Z': {
+                        pattern: /[0-9]/, optional: true
+                    }
+                }
+            });
+
+    $( '#stopSimulacao').click(function(){
+        stopSimulacao = true;
+    });
 
     $('#reload').click(function(){
         location.reload();
