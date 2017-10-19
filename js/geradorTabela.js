@@ -9,6 +9,7 @@ function gerarTabelaEquipamento1(dataSet){
         data: dataSet,
         searching: false,
         destroy: true,
+        bSort: false,
         "columns": [
             { "title": "Equipamento" },
             { "title": "TEC" },
@@ -16,8 +17,8 @@ function gerarTabelaEquipamento1(dataSet){
             { "title": "Tempo Serviço" },
             { "title": "Tempo em Fila" },
             { "title": "Tempo no sistema" },
-            { "title": "Tempo Livre Equipamento" }
-
+            { "title": "Tempo Livre Equipamento" },
+            { "title": "Tempo Saída do Sistema" }
         ]
     });
 
@@ -29,6 +30,7 @@ function gerarTabelaEquipamento2(dataSet){
         data: dataSet,
         searching: false,
         destroy: true,
+        bSort: false,
         "columns": [
             { "title": "Equipamento" },
             { "title": "TEC" },
@@ -36,8 +38,8 @@ function gerarTabelaEquipamento2(dataSet){
             { "title": "Tempo Serviço" },
             { "title": "Tempo em Fila" },
             { "title": "Tempo no sistema" },
-            { "title": "Tempo Livre Equipamento" }
-
+            { "title": "Tempo Livre Equipamento" },
+            { "title": "Tempo Saída do Sistema" }
         ]
     });
 }

@@ -17,7 +17,7 @@ $(document).ready(function(){
         var equipamento_2;
 
         if(verificaInputs()){
-            entidades = geradorEntidades(timer);
+            geradorEntidades(timer);
             equipamento_1 = new Equipamento(geradorTServico(timer),
                 geradorTempoEntreFalha(timer), geradorDuracaoFalha(timer), []);
 
@@ -44,6 +44,7 @@ $(document).ready(function(){
         //Variáveis Equipamento 1
         var ts_e1 = 0;
         var tempoExecucao_e1 = 0;
+        var tempoSaida_e1 = 0;
         var listaEventoFalha_e1 = geradorTempoEntreFalha(timer, "e1");
         //Iterador da lista de eventos de Falha do equipamento 1
         var iteradorListFalha_e1 = 0;
@@ -57,6 +58,7 @@ $(document).ready(function(){
         //Variaveis Equipament 2
         var ts_e2 = 0;
         var tempoExecucao_e2 = 0;
+        var tempoSaida_e2 = 0;
         var listaEventoFalha_e2 = geradorTempoEntreFalha(timer, "e2");
         //Iterador da lista de eventos de Falha do equipamento 2
         var iteradorListFalha_e2 = 0;
@@ -99,7 +101,7 @@ $(document).ready(function(){
                         equipamentoE1("e2");
                     }
                 } else {
-                   equipamentoE2("e2");
+                    equipamentoE2("e2");
                 }
             }
 
@@ -116,49 +118,63 @@ $(document).ready(function(){
                 contadorEntidade2++;
             }
 
+            tempoRelogio = tempoRelogio + tec;
+            
             if (ts_e1 > 0) {
                 ts_e1 = Number(geradorTServico());
-                tempoFila = tempoExecucao_e1 - tempoRelogio;
+                tempoFila = tempoSaida_e1 - tempoRelogio;
                 tempoLivre_e1 = 0;
                 if (tempoFila <= 0) {
-                    tempoLivre_e1 = tempoFila *-1;
                     tempoFila = 0;
+                }
+
+                if(tempoSaida_e1 - tempoRelogio < 0){
+                    tempoLivre_e1 = tempoRelogio - tempoSaida_e1;
+                } else {
+                    tempoLivre_e1 = 0;
                 }
             } else {
                 ts_e1 = Number(geradorTServico());
-                tempoLivre_e1 = tempoRelogio + tec;
+                tempoLivre_e1 = tec;
             }
 
-            tempoRelogio = tempoRelogio + tec;
             tempoExecucao_e1 = ts_e1 + tempoFila;
-            tempoSaida = tempoRelogio + ts_e1 + tempoFila;
+            tempoSaida_e1 = tempoRelogio + tempoExecucao_e1;
 
-            listaEventos_e1.push([entidade, tec, tempoRelogio, ts_e1, tempoFila, tempoExecucao_e1, tempoLivre_e1]);
+            listaEventos_e1.push([entidade, tec, tempoRelogio, ts_e1, tempoFila, tempoExecucao_e1, tempoLivre_e1, tempoSaida_e1]);
         }
 
         function equipamentoE2(entidade){
             if(entidade == "e1"){
                 contadorEntidade1++;
             }
-
+            
+            tempoRelogio = tempoRelogio + tec;
+            
             if (ts_e2 > 0) {
                 ts_e2 = Number(geradorTServico());
-                tempoFila = tempoExecucao_e2 - tempoRelogio;
+                tempoFila = tempoSaida_e2    - tempoRelogio;
                 tempoLivre_e2 = 0;
                 if (tempoFila <= 0) {
-                     tempoLivre_e2 = tempoFila *-1;
                     tempoFila = 0;
                 }
+
+                if(tempoSaida_e2 - tempoRelogio < 0){
+                    tempoLivre_e2 = tempoRelogio - tempoSaida_e2;
+                } else {
+                    tempoLivre_e2 = 0;
+                }
+
             } else {
                 ts_e2 = Number(geradorTServico());
-                tempoLivre_e2 = tempoRelogio + tec;
+                tempoLivre_e2 = tec;
             }
 
-            tempoRelogio = tempoRelogio + tec;
             tempoExecucao_e2 = ts_e2 + tempoFila;
-            tempoSaida = tempoRelogio + ts_e2 + tempoFila;
+            tempoSaida_e2 = tempoRelogio + tempoExecucao_e2;
+
             //listaEventos.push(new Evento(new Entidade(tec, entidade,tempoExecucao_e2), 0+tempoRelogio));
-            listaEventos_e2.push([entidade, tec, tempoRelogio, ts_e2, tempoFila, tempoExecucao_e2, tempoLivre_e2]);
+            listaEventos_e2.push([entidade, tec, tempoRelogio, ts_e2, tempoFila, tempoExecucao_e2, tempoLivre_e2,  tempoSaida_e2]);
 
         }
 

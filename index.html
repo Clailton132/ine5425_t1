@@ -142,7 +142,15 @@
             </div>
             <hr>
             <button type="button" class="btn btn-primary margin-bt" id="start">Gerar Simulação</button>
-            <button type="button" class="btn btn-danger margin-bt" id="stop">Parar Simulação</button>
+            <br>
+            <div id="botoes-controle">
+                <button type="button" class="btn btn-success margin-bt" id="restart">
+                    <span class="glyphicon glyphicon-play" aria-hidden="true"></span>
+                </button>
+                <button type="button" class="btn btn-danger margin-bt" id="stop">
+                    <span class="glyphicon glyphicon-pause" aria-hidden="true"></span>
+                </button>
+            </div>
             <br>
             <img class="loader margin-bt" id="img-loader"></img>
         </div>
@@ -151,6 +159,7 @@
     <ul class="nav nav-tabs">
         <li class="active"><a data-toggle="tab" href="#aba-tabelas">Tabelas de Simulação</a></li>
         <li><a data-toggle="tab" href="#aba-graficos">Grágicos</a></li>
+        <li><a data-toggle="tab" href="#aba-estatistica">Estatisticas</a></li>
     </ul>
 
     <div class="tab-content">
@@ -163,6 +172,9 @@
         </div>
         <div id="aba-graficos" class="starter-template tab-pane fade">
             <h2>Gráficos</h2>
+        </div>
+        <div id="aba-estatistica" class="starter-template tab-pane fade">
+            <h2>Estátisticas solicitadas no trabalho</h2>
         </div>
     </div>
 </body>

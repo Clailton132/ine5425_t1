@@ -3,7 +3,8 @@
  */
 
 //Variável global no sistema q para a simulção;
- stopSimulacao = false;
+stopSimulacao = false;
+reloadSimulacao = false; 
 
 $(document).ready(function(){
 
@@ -16,7 +17,7 @@ $(document).ready(function(){
     $('#img-loader').hide();
 
     $('#valor-tce').val('uniforme');
-    $('#input-tce').val('12,14');
+    $('#input-tce').val('6,9');
     // $('#valor-tce').change(function(){
     //     var tipoTCE = this.value;
     //     if(tipoTCE != "default"){
@@ -35,8 +36,8 @@ $(document).ready(function(){
     //     }
     // });
 
-    $('#valor-ts').val('constante');
-    $('#input-ts').val('10');
+    $('#valor-ts').val('uniforme');
+    $('#input-ts').val('8,13');
     // $('#valor-ts').change(function(){
     //     var tipoTS = this.value;
     //     if(tipoTS != "default"){
@@ -55,8 +56,8 @@ $(document).ready(function(){
     //     }
     // });
 
-    $('#tempo-falha').val('constante');
-    $('#input-tfalha').val('10');
+    $('#tempo-falha').val('uniforme');
+    $('#input-tfalha').val('45, 60');
     // $('#tempo-falha').change(function(){
     //     var tipoTFalha = this.value;
     //     if(tipoTFalha != "default"){
@@ -76,7 +77,7 @@ $(document).ready(function(){
     // });
 
     $('#valor-falha').val('constante');
-    $('#input-falha').val('10');
+    $('#input-falha').val('15');
     // $('#valor-falha').change(function(){
     //     var tipoFalha = this.value;
     //     if(tipoFalha != "default"){
