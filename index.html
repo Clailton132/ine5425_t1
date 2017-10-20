@@ -31,6 +31,8 @@
     <script src="js/startSimulacao.js"></script>
     <script src="js/distribuicao.js"></script>
     <script src="js/geradorTabela.js"></script>
+    <script src="js/gerarEstatisticas.js"></script>
+    <script src="js/loopSimulacao.js"></script>
 
 
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
@@ -139,6 +141,14 @@
             <div>
                 <h3>Informe a duração da simulação <small>(Em horas)</small>:</h3>
                 <input class="input-duracao" id="duracao-simulacao" type="text" placeholder="Duracao máxima 999 horas">
+                <br>
+                <h3>Informe a velocidade da simulação:</h3>
+                <select class="input-duracao" id="velocidade-Simulacao">
+                    <option value="1000">10x</option>
+                    <option value="500">50x</option>
+                    <option value="100">100x</option>
+                    <option value="max">Máximo</option>
+                </select>
             </div>
             <hr>
             <button type="button" class="btn btn-primary margin-bt" id="start">Gerar Simulação</button>
@@ -175,6 +185,8 @@
         </div>
         <div id="aba-estatistica" class="starter-template tab-pane fade">
             <h2>Estátisticas solicitadas no trabalho</h2>
+            <p id="nmEntidade1"></p>
+            <p id="nmEntidade2"></p>
         </div>
     </div>
 </body>

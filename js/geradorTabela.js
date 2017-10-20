@@ -3,7 +3,7 @@
  */
 
 
-function gerarTabelaEquipamento1(dataSet){
+function gerarTabelaEquipamento1(dataSet, timer){
     //tabela_e1.destroy();
     $('#tabelaSimulacao_e1').dataTable( {
         data: dataSet,

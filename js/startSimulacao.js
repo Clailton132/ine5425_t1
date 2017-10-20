@@ -3,7 +3,8 @@
  */
 
 $(document).ready(function(){
-    
+    var loopExecucao;
+
     $('#start').click(function(){
     	var timer = Number($("#duracao-simulacao").val()) * 60;
     	gerarEntidades(timer);
@@ -12,24 +13,8 @@ $(document).ready(function(){
     function gerarEntidades(timer){
         //TODO para testes, o tempo de simulão foi FIXADO em 24h (1440 minutos)
         //var timer = 1440;
-        var entidades;
-        var equipamento_1;
-        var equipamento_2;
-
-        if(verificaInputs()){
-            geradorEntidades(timer);
-            equipamento_1 = new Equipamento(geradorTServico(timer),
-                geradorTempoEntreFalha(timer), geradorDuracaoFalha(timer), []);
-
-            equipamento_2 = new Equipamento(geradorTServico(timer),
-                geradorTempoEntreFalha(timer), geradorDuracaoFalha(timer),[]);
-        } else {
-            alert("Preencha todos os campos!")
-        }
-    }
-
-    function geradorEntidades(timer) {
-
+        var timerAux = 0;
+        var velocidade = $('#velocidade-Simulacao').val();
         var tipoTCE = $("#input-tce");
         var tipoDistribuicao = $('#valor-tce');
         $('#img-loader').show();
@@ -68,9 +53,45 @@ $(document).ready(function(){
         var contadorEntidade1 = 0;
         var tempoLivre_e2 = 0;
         var listaEventos_e2 = [];
+        inicioSimulacao();
 
-        while (tempoRelogio <= timer){
-            tec = gerarDistribuicao(tipoTCE, tipoDistribuicao[0].value);
+        function inicioSimulacao(){
+            if(verificaInputs()){
+                if(velocidade != "max"){
+                    loopExecucao = setInterval(function() {
+                        tec = geraTEC();
+                        startSimulacaoTest(timer, tec);
+                        timerAux = timerAux + tec;
+                        if(!(timer > timerAux)) {
+                            clearInterval(loopExecucao);
+                            $('#img-loader').hide();
+                            $('#start').show();
+                            $('#botoes-controle').hide();
+                        }
+                        gerarTabelaEquipamento1(listaEventos_e1);
+                        gerarTabelaEquipamento2(listaEventos_e2);
+                    }, Number(velocidade));
+                } else {
+                    while(timer > timerAux){
+                        tec = geraTEC();
+                        startSimulacaoTest(timer, tec);
+                        timerAux = timerAux + tec;
+
+                        gerarTabelaEquipamento1(listaEventos_e1);
+                        gerarTabelaEquipamento2(listaEventos_e2);
+                    }
+                    clearInterval(loopExecucao);
+                    $('#img-loader').hide();
+                    $('#start').show();
+                    $('#botoes-controle').hide();
+                }
+
+            } else {
+                alert("Preencha todos os campos!")
+            }
+        }
+
+        function startSimulacaoTest(timer, tec){
             //Atualiza Evento de falha atual
             listaEventoFalha_e1[iteradorListFalha_e1].estado =
                 atualizaEventoFalha(listaEventoFalha_e1[iteradorListFalha_e1], tempoRelogio);
@@ -119,7 +140,7 @@ $(document).ready(function(){
             }
 
             tempoRelogio = tempoRelogio + tec;
-            
+
             if (ts_e1 > 0) {
                 ts_e1 = Number(geradorTServico());
                 tempoFila = tempoSaida_e1 - tempoRelogio;
@@ -141,19 +162,25 @@ $(document).ready(function(){
             tempoExecucao_e1 = ts_e1 + tempoFila;
             tempoSaida_e1 = tempoRelogio + tempoExecucao_e1;
 
-            listaEventos_e1.push([entidade, tec, tempoRelogio, ts_e1, tempoFila, tempoExecucao_e1, tempoLivre_e1, tempoSaida_e1]);
+            if(tempoSaida_e1 > timer){
+                var tempoSaida_e1aux = "Preso no sistema!";
+                listaEventos_e1.push([entidade, tec, tempoRelogio, ts_e1, tempoFila, tempoExecucao_e1, tempoLivre_e1, tempoSaida_e1aux]);
+            } else {
+                listaEventos_e1.push([entidade, tec, tempoRelogio, ts_e1, tempoFila, tempoExecucao_e1, tempoLivre_e1, tempoSaida_e1]);
+            }
+
         }
 
         function equipamentoE2(entidade){
             if(entidade == "e1"){
                 contadorEntidade1++;
             }
-            
+
             tempoRelogio = tempoRelogio + tec;
-            
+
             if (ts_e2 > 0) {
                 ts_e2 = Number(geradorTServico());
-                tempoFila = tempoSaida_e2    - tempoRelogio;
+                tempoFila = tempoSaida_e2 - tempoRelogio;
                 tempoLivre_e2 = 0;
                 if (tempoFila <= 0) {
                     tempoFila = 0;
@@ -173,14 +200,37 @@ $(document).ready(function(){
             tempoExecucao_e2 = ts_e2 + tempoFila;
             tempoSaida_e2 = tempoRelogio + tempoExecucao_e2;
 
+            if(tempoSaida_e2 > timer){
+                var tempoSaida_e2aux = "Preso no sistema!";
+                listaEventos_e2.push([entidade, tec, tempoRelogio, ts_e2, tempoFila, tempoExecucao_e2, tempoLivre_e2,  tempoSaida_e2aux]);
+            } else {
+                listaEventos_e2.push([entidade, tec, tempoRelogio, ts_e2, tempoFila, tempoExecucao_e2, tempoLivre_e2,  tempoSaida_e2]);
+            }
+
             //listaEventos.push(new Evento(new Entidade(tec, entidade,tempoExecucao_e2), 0+tempoRelogio));
-            listaEventos_e2.push([entidade, tec, tempoRelogio, ts_e2, tempoFila, tempoExecucao_e2, tempoLivre_e2,  tempoSaida_e2]);
+
 
         }
 
-        gerarTabelaEquipamento1(listaEventos_e1);
-        gerarTabelaEquipamento2(listaEventos_e2);
-        $('#img-loader').hide();
+        //gerarTabelaEquipamento1(listaEventos_e1);
+        //gerarTabelaEquipamento2(listaEventos_e2);
+        geradorEstatisticas(listaEventos_e1, listaEventos_e2);
+
+        $('#stop').click(function(){
+            clearInterval(loopExecucao);
+            $('#img-loader').hide();
+        });
+
+        $('#restart').click(function(){
+            inicioSimulacao();
+            $('#img-loader').show();
+        });
+    }
+
+    function geraTEC(){
+        var tipoTCE = $("#input-tce");
+        var tipoDistribuicao = $('#valor-tce');
+        return  gerarDistribuicao(tipoTCE, tipoDistribuicao[0].value);
     }
 
     function atualizaEventoFalha(Equipamento, tempoRelogio){
@@ -202,7 +252,7 @@ $(document).ready(function(){
     function geradorTempoEntreFalha(timer, equipamento){
         var tipoTFalha = $("#input-tfalha");
         var tipoDistribuicao = $('#tempo-falha');
-        
+
         var falhaNoTempo = 0;
         var duracaoFalha = 0;
         var fimEventoFalha = 0;
@@ -260,13 +310,15 @@ $(document).ready(function(){
                 return "erro";
         }
     }
-    
+
+
+
+
     function verificaInputs() {
-        return true;
-        /*return !($('#input-tce').val() == '' ||
+        return !($('#input-tce').val() == '' ||
         $('#input-ts').val() == '' ||
         $('#input-tfalha').val() == '' ||
         $('#input-falha').val() == '' ||
-        $('#duracao-simulacao').val() == '');*/
+        $('#duracao-simulacao').val() == '');
     }
 });
