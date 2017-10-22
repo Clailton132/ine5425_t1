@@ -21,6 +21,7 @@ $(document).ready(function(){
 
         var tec = 0;
         var tempoRelogio = 0;
+        var entidadePresaNoSistema = 0;
 
         //Variáveis Equipamento 1
         var ts_e1 = 0;
@@ -56,6 +57,7 @@ $(document).ready(function(){
         var contadorTEC = 0;
         var status_e1 = "Ativo";
         var status_e2 = "Falha";
+        var duracaoFalha = 0;
         inicioSimulacao();
 
         function inicioSimulacao(){
@@ -69,7 +71,8 @@ $(document).ready(function(){
                             clearInterval(loopExecucao);
                             $('#start').show();
                             $('#botoes-controle').hide();
-                            plotaDadosSimulacao(listaEventos_e1, listaEventos_e2);
+                            plotaDadosSimulacao(listaEventos_e1, listaEventos_e2, 
+                                listaEventoFalha_e1, listaEventoFalha_e2, contadorEntidade1, contadorEntidade2);
                         }
                     }, Number(velocidade));
                 } else {
@@ -81,7 +84,8 @@ $(document).ready(function(){
                     clearInterval(loopExecucao);
                     $('#start').show();
                     $('#botoes-controle').hide();
-                    plotaDadosSimulacao(listaEventos_e1, listaEventos_e2);
+                    plotaDadosSimulacao(listaEventos_e1, listaEventos_e2, 
+                        listaEventoFalha_e1, listaEventoFalha_e2, contadorEntidade1, contadorEntidade2);
                 }
             } else {
                 alert("Preencha todos os campos!")
@@ -165,6 +169,7 @@ $(document).ready(function(){
             tempoSaida_e1 = tempoRelogio + tempoExecucao_e1;
 
             if(tempoSaida_e1 > timer){
+                entidadePresaNoSistema++;
                 var tempoSaida_e1aux = "Preso no sistema!";
                 listaEventos_e1.push([entidade, tec, tempoRelogio, ts_e1, tempoFila_e1, tempoExecucao_e1, tempoLivre_e1, tempoSaida_e1aux]);
             } else {
@@ -203,6 +208,7 @@ $(document).ready(function(){
             tempoSaida_e2 = tempoRelogio + tempoExecucao_e2;
 
             if(tempoSaida_e2 > timer){
+                entidadePresaNoSistema++;
                 var tempoSaida_e2aux = "Preso no sistema!";
                 listaEventos_e2.push([entidade, tec, tempoRelogio, ts_e2, tempoFila_e2, tempoExecucao_e2, tempoLivre_e2,  tempoSaida_e2aux]);
             } else {
@@ -211,6 +217,8 @@ $(document).ready(function(){
         }
 
         $('#stop').click(function(){
+            plotaDadosSimulacao(listaEventos_e1, listaEventos_e2,
+                listaEventoFalha_e1, listaEventoFalha_e2, contadorEntidade1, contadorEntidade2);
             clearInterval(loopExecucao);
         });
 
@@ -254,7 +262,7 @@ $(document).ready(function(){
             falhaNoTempo = falhaNoTempo + Number(gerarDistribuicao(tipoTFalha, tipoDistribuicao[0].value));
             duracaoFalha = Number(geradorDuracaoFalha());
             fimEventoFalha = falhaNoTempo + duracaoFalha;
-            tempoEntreFalhas.push(new Falha(equipamento, falhaNoTempo, fimEventoFalha, "ativo"));
+            tempoEntreFalhas.push(new Falha(equipamento, falhaNoTempo, fimEventoFalha, "ativo", duracaoFalha));
             falhaNoTempo = fimEventoFalha;
         }
         return tempoEntreFalhas;
@@ -333,9 +341,11 @@ $(document).ready(function(){
         $('#duracao-simulacao').val() == '');
     }
 
-    function plotaDadosSimulacao(listaEventos_e1, listaEventos_e2){
+    function plotaDadosSimulacao(listaEventos_e1, listaEventos_e2, 
+                                 listaEventoFalha_e1, listaEventoFalha_e2, contadorEntidade1, contadorEntidade2){
         gerarTabelaEquipamento1(listaEventos_e1);
         gerarTabelaEquipamento2(listaEventos_e2);
-        geradorEstatisticas(listaEventos_e1, listaEventos_e2);
+        geradorEstatisticas(listaEventos_e1, listaEventos_e2, 
+            listaEventoFalha_e1, listaEventoFalha_e2, contadorEntidade1, contadorEntidade2);
     }
 });

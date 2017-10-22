@@ -57,7 +57,7 @@
         <div id="navbar" class="collapse navbar-collapse">
             <ul class="nav navbar-nav">
                 <li class=""><a href="#new-modelo" id="reload">Nova Simulação</a></li>
-                <li><a href="#graficos">Gráficos</a></li>
+                <!--<li><a href="#graficos">Gráficos</a></li>-->
             </ul>
         </div><!--/.nav-collapse -->
     </div>
@@ -162,38 +162,90 @@
                 </button>
                 <br>
                 <div>
-                    <label style="border-style: inset;"> Entidades Geradas: <p id="contador-tec"></p> </label>
-                    <label style="border-style: inset;"> Estado Equipamento 1: <p id="status-e1"></p> </label>
-                    <label style="border-style: inset;"> Estado Equipamento 2: <p id="status-e2"></p> </label>
+                    <label class="border"> Entidades Geradas: <p id="contador-tec"></p> </label>
+                    <label class="border"> Estado Equipamento 1: <p id="status-e1"></p> </label>
+                    <label class="border"> Estado Equipamento 2: <p id="status-e2"></p> </label>
                 </div>
             </div>
             <br>
         </div>
     </div>
 </div>
-    <br>
-    <ul class="nav nav-tabs">
-        <li class="active"><a data-toggle="tab" href="#aba-tabelas">Tabelas de Simulação</a></li>
-        <li><a data-toggle="tab" href="#aba-graficos">Grágicos</a></li>
-        <li><a data-toggle="tab" href="#aba-estatistica">Estatisticas</a></li>
-    </ul>
+<br>
+<ul class="nav nav-tabs">
+    <li class="active"><a data-toggle="tab" href="#aba-tabelas">Tabelas de Simulação</a></li>
+    <!--<li><a data-toggle="tab" href="#aba-graficos">Grágicos</a></li>-->
+    <li><a data-toggle="tab" href="#aba-estatistica">Estatisticas</a></li>
+</ul>
 
-    <div class="tab-content">
-        <div id="aba-tabelas" class="starter-template tab-pane fade in active">
-            <h2>Tabela de Simulação Equipamento 1</h2>
-            <table cellpadding="0" cellspacing="0" border="0" class="display" id="tabelaSimulacao_e1"></table>
-            <hr>
-            <h2>Tabela de Simulação Equipamento 2</h2>
-            <table cellpadding="0" cellspacing="0" border="0" class="display" id="tabelaSimulacao_e2"></table>
-        </div>
-        <div id="aba-graficos" class="starter-template tab-pane fade">
-            <h2>Gráficos</h2>
-        </div>
-        <div id="aba-estatistica" class="starter-template tab-pane fade">
-            <h2>Estátisticas solicitadas no trabalho</h2>
-            <p id="nmEntidade1"></p>
-            <p id="nmEntidade2"></p>
+<div class="tab-content">
+    <div id="aba-tabelas" class="starter-template tab-pane fade in active">
+        <h2>Tabela de Simulação Equipamento 1</h2>
+        <table cellpadding="0" cellspacing="0" border="0" class="display" id="tabelaSimulacao_e1"></table>
+        <hr>
+        <h2>Tabela de Simulação Equipamento 2</h2>
+        <table cellpadding="0" cellspacing="0" border="0" class="display" id="tabelaSimulacao_e2"></table>
+    </div>
+    <div id="aba-graficos" class="starter-template tab-pane fade">
+        <h2>Gráficos</h2>
+    </div>
+    <div id="aba-estatistica" class="tab-pane fade bs-estatisticas">
+        <div class="col-md-12">
+            <h2 style="text-align: center;">Estátisticas solicitadas no trabalho</h2>
+            <br>
+            <div class="col-md-6">
+                <div class="panel panel-default melhorias">
+                    <div class="panel-heading">Número Médio de Entidades nas Filas:</div>
+                    <div class="panel-body">
+                        <p id="media-entidade-na-fila"></p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="panel panel-default melhorias">
+                    <div class="panel-heading">Taxa Média de Ocupação dos Servidores:</div>
+                    <div class="panel-body">
+                        <p id="taxa-media-ocupacao"></p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6"><div class="panel panel-default melhorias">
+                <div class="panel-heading">Tempo Médio de uma Entidade na Fila:</div>
+                <div class="panel-body">
+                    <p id="media-em-fila"></p>
+                </div>
+            </div></div>
+            <div class="col-md-6"><div class="panel panel-default">
+                <div class="panel-heading">Tempo Médio no Sistema:</div>
+                <div class="panel-body">
+                    <p id="tempo-medio-sistema"></p>
+                </div>
+            </div></div>
+            <div class="col-md-6"><div class="panel panel-default">
+                <div class="panel-heading">Contador de Entidades:</div>
+                <div class="panel-body">
+                    <p id="numero-entidades-1"></p>
+                    <p id="numero-entidades-2"></p>
+                </div>
+            </div></div>
+            <div class="col-md-6"><div class="panel panel-default">
+                <div class="panel-heading">Falhas:</div>
+                <div class="panel-body">
+                    <p id="em-falha-1"></p>
+                    <p id="em-falha-2"></p>
+                </div>
+            </div></div>
+            <div class="col-md-6">
+                <div class="panel panel-default">
+                    <div class="panel-heading">Contagem de trocas:</div>
+                    <div class="panel-body">
+                        <p id="atendiment_cross-1"></p>
+                        <p id="atendiment_cross-2"></p>
+                    </div></div>
+            </div>
         </div>
     </div>
+</div>
 </body>
 </html>
