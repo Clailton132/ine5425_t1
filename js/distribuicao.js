@@ -1,41 +1,43 @@
-/**
- * Created by Clailton on 09/10/2017.
- */
+function Distribuicao() {
 
-$(document).ready(function(){
+    const funcoes = {
+        constante: function(a) {
+            return a;
+        },
 
-});
-function constante(a) {
-    //TODO Usar a constante passada como parametro?
-    return a;
-    //return Math.round(Math.random());
-}
+        uniforme: function(a, b) {
+            return Math.round(a + (b - a) * Math.random());
+        },
 
-function uniforne(a, b){
-    var aleatorio = Math.random();
+        triangular: function(a, b, c) {
+            const aleatorio = Math.random();
 
-    return Math.round(a+(b-a)*aleatorio);
-}
+            if ((b - a) / (c - a) <= aleatorio && aleatorio >= 0) {
+                return Math.round(a + Math.sqrt(aleatorio * (b - a) * (c - a)));
+            } else {
+                return Math.round(c - Math.sqrt((1 - aleatorio) * (c - b) * (c - a)));
+            }
+        },
 
-function triangular(a, b, c) {
-    var aleatorio = Math.random();
+        exponencial: function(lambda) {
+            return Math.round(-lambda * Math.log(1 - Math.random()));
+        },
 
-    if((b-a)/(c-a)<=aleatorio && aleatorio>=0){
-        return Math.round(a+Math.sqrt(aleatorio*(b-a)*(c-a)));
-    }else{
-        return Math.round(c-Math.sqrt((1-aleatorio)*(c-b)*(c-a)));
-    }
-}
+        normal: function(med, dp) {
+            const aleatorio = Math.random();
+            const aleatorio2 = Math.random();
+            const z1 = Math.sqrt(-2 * Math.log(aleatorio)) * Math.cos(2 * Math.PI * aleatorio2);
+            return Math.round(med + dp * z1);
+        }
+    };
 
-function exponencial(lambda) {
-    var aleatorio = Math.random();
+    return {
+        gerar: function(tipo, valores) {
+            if (!(tipo in funcoes)) {
+                throw new TypeError(`Função '${tipo}' de problabilidade não encontrada`);
+            }
 
-    return Math.round(-lambda*Math.log(1-aleatorio));
-}
-
-function normal (med, dp){
-    var aleatorio = Math.random();
-    var aleatorio2 = Math.random();
-    var z1 = Math.sqrt(-2*Math.log(aleatorio))*Math.cos(2*Math.PI*aleatorio2);
-    return Math.round(med+dp*z1);
+            return () => funcoes[tipo](...(valores.split(",").map(Number)));
+        }
+    };
 }
