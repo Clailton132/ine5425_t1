@@ -16,6 +16,7 @@ $(document).ready(function(){
 
     $('#valor-tce').val('uniforme');
     $('#input-tce').val('6,9');
+    $('#duracao-simulacao').val('1');
     // $('#valor-tce').change(function(){
     //     var tipoTCE = this.value;
     //     if(tipoTCE != "default"){

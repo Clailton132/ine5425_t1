@@ -4,19 +4,46 @@
 
 $(document).ready(function(){
     var loopExecucao;
+    var funcaoDistribuicao;
 
     $('#start').click(function(){
-    	var timer = Number($("#duracao-simulacao").val()) * 60;
-    	gerarEntidades(timer);
+        var timer = Number($("#duracao-simulacao").val()) * 60;
+        carregarFuncoes();
+        gerarEntidades(timer);
     });
 
+    function carregarFuncoes() {
+        const gerador = Distribuicao();
+
+        // Carrega funcoes de TEC
+        const nomeFuncaoTEC = $('#valor-tce').val();
+        const paramsTEC = $("#input-tce").val();
+
+        // Carrega funcoes de TS
+        const nomeFuncaoTS = $('#valor-ts').val();
+        const paramsTS = $("#input-ts").val();
+
+        // Carrega funcoes de TEF
+        const nomeFuncaoTEF = $('#tempo-falha').val();
+        const paramsTEF = $("#input-tfalha").val();
+
+        // Carrega funcoes de TF
+        const nomeFuncaoTF = $('#valor-falha').val();
+        const paramsTF = $("#input-falha").val();
+
+        funcaoDistribuicao = {
+            tec: gerador.gerar(nomeFuncaoTEC, paramsTEC),
+            ts: gerador.gerar(nomeFuncaoTS, paramsTS),
+            tef: gerador.gerar(nomeFuncaoTEF, paramsTEF),
+            tf: gerador.gerar(nomeFuncaoTF, paramsTF) // funcão que gera a duração da falha
+        };
+    }
+
     function gerarEntidades(timer){
-        //TODO para testes, o tempo de simulão foi FIXADO em 24h (1440 minutos)
+        //TODO para testes, o tempo de simulação foi FIXADO em 24h (1440 minutos)
         //var timer = 1440;
         var timerAux = 0;
         var velocidade = $('#velocidade-Simulacao').val();
-        var tipoTCE = $("#input-tce");
-        var tipoDistribuicao = $('#valor-tce');
         resetStatus();
 
         var tec = 0;
@@ -52,7 +79,7 @@ $(document).ready(function(){
         var contadorEntidade1 = 0;
         var tempoLivre_e2 = 0;
         var listaEventos_e2 = [];
-        
+
         //variaveis para acompanhamento da simulação;
         var contadorTEC = 0;
         var status_e1 = "Ativo";
@@ -64,27 +91,27 @@ $(document).ready(function(){
             if(verificaInputs()){
                 if(velocidade != "max"){
                     loopExecucao = setInterval(function() {
-                        tec = geraTEC();
+                        tec = funcaoDistribuicao.tec();
                         startSimulacao(timer, tec);
                         timerAux = timerAux + tec;
                         if(!(timer > timerAux + tec)) {
                             clearInterval(loopExecucao);
                             $('#start').show();
                             $('#botoes-controle').hide();
-                            plotaDadosSimulacao(listaEventos_e1, listaEventos_e2, 
+                            plotaDadosSimulacao(listaEventos_e1, listaEventos_e2,
                                 listaEventoFalha_e1, listaEventoFalha_e2, contadorEntidade1, contadorEntidade2);
                         }
                     }, Number(velocidade));
                 } else {
                     while(timer > timerAux + tec){
-                        tec = geraTEC();
+                        tec = funcaoDistribuicao.tec();
                         startSimulacao(timer, tec);
                         timerAux = timerAux + tec;
                     }
                     clearInterval(loopExecucao);
                     $('#start').show();
                     $('#botoes-controle').hide();
-                    plotaDadosSimulacao(listaEventos_e1, listaEventos_e2, 
+                    plotaDadosSimulacao(listaEventos_e1, listaEventos_e2,
                         listaEventoFalha_e1, listaEventoFalha_e2, contadorEntidade1, contadorEntidade2);
                 }
             } else {
@@ -133,7 +160,7 @@ $(document).ready(function(){
             if(listaEventoFalha_e2[iteradorListFalha_e2].fimFalha <= tempoRelogio){
                 iteradorListFalha_e2++;
             }
-            
+
             contadorTEC++;
             status_e1 = listaEventoFalha_e1[iteradorListFalha_e1].estado;
             status_e2 = listaEventoFalha_e1[iteradorListFalha_e2].estado;
@@ -148,7 +175,7 @@ $(document).ready(function(){
             tempoRelogio = tempoRelogio + tec;
 
             if (ts_e1 > 0) {
-                ts_e1 = Number(geradorTServico());
+                ts_e1 = funcaoDistribuicao.ts();
                 tempoFila_e1 = tempoSaida_e1 - tempoRelogio;
                 tempoLivre_e1 = 0;
                 if (tempoFila_e1 <= 0) {
@@ -161,7 +188,7 @@ $(document).ready(function(){
                     tempoLivre_e1 = 0;
                 }
             } else {
-                ts_e1 = Number(geradorTServico());
+                ts_e1 = funcaoDistribuicao.ts();
                 tempoLivre_e1 = tec;
             }
 
@@ -186,7 +213,7 @@ $(document).ready(function(){
             tempoRelogio = tempoRelogio + tec;
 
             if (ts_e2 > 0) {
-                ts_e2 = Number(geradorTServico());
+                ts_e2 = funcaoDistribuicao.ts();
                 tempoFila_e2 = tempoSaida_e2 - tempoRelogio;
                 tempoLivre_e2 = 0;
                 if (tempoFila_e2 <= 0) {
@@ -200,7 +227,7 @@ $(document).ready(function(){
                 }
 
             } else {
-                ts_e2 = Number(geradorTServico());
+                ts_e2 = funcaoDistribuicao.ts();
                 tempoLivre_e2 = tec;
             }
 
@@ -227,12 +254,6 @@ $(document).ready(function(){
         });
     }
 
-    function geraTEC(){
-        var tipoTCE = $("#input-tce");
-        var tipoDistribuicao = $('#valor-tce');
-        return  gerarDistribuicao(tipoTCE, tipoDistribuicao[0].value);
-    }
-
     function atualizaEventoFalha(Equipamento, tempoRelogio){
         if(tempoRelogio >= Equipamento.inicioFalha &&
             tempoRelogio <= Equipamento.fimFalha){
@@ -242,25 +263,14 @@ $(document).ready(function(){
         }
     }
 
-    function geradorTServico(){
-        var tipoTS = $("#input-ts");
-        var tipoDistribuicao = $('#valor-ts');
-
-        return gerarDistribuicao(tipoTS, tipoDistribuicao[0].value);
-    }
-
-    function geradorTempoEntreFalha(timer, equipamento){
-        var tipoTFalha = $("#input-tfalha");
-        var tipoDistribuicao = $('#tempo-falha');
-
+    function geradorTempoEntreFalha(timer, equipamento) {
         var falhaNoTempo = 0;
-        var duracaoFalha = 0;
         var fimEventoFalha = 0;
         var tempoEntreFalhas= [];
 
-        while ((timer - falhaNoTempo) >= 0){
-            falhaNoTempo = falhaNoTempo + Number(gerarDistribuicao(tipoTFalha, tipoDistribuicao[0].value));
-            duracaoFalha = Number(geradorDuracaoFalha());
+        while ((timer - falhaNoTempo) >= 0) {
+            falhaNoTempo = falhaNoTempo + funcaoDistribuicao.tef();
+            duracaoFalha = funcaoDistribuicao.tf();
             fimEventoFalha = falhaNoTempo + duracaoFalha;
             tempoEntreFalhas.push(new Falha(equipamento, falhaNoTempo, fimEventoFalha, "ativo", duracaoFalha));
             falhaNoTempo = fimEventoFalha;
@@ -268,23 +278,16 @@ $(document).ready(function(){
         return tempoEntreFalhas;
     }
 
-    function geradorDuracaoFalha() {
-        var tipoDFalha = $("#input-falha");
-        var tipoDistribuicao = $('#valor-falha');
-
-        return gerarDistribuicao(tipoDFalha, tipoDistribuicao[0].value);
-    }
-
     function atualizadaStatus(contTEC, status_e1, status_e2){
         $('#contador-tec').text(contTEC);
 
-        if(status_e1 == "falha") {
+        if(status_e1 === "falha") {
             $('#status-e1').text(status_e1).css('color', 'red');
         } else {
             $('#status-e1').text(status_e1).css('color', 'green');
         }
 
-        if(status_e2 == "falha") {
+        if(status_e2 === "falha") {
             $('#status-e2').text(status_e2).css('color', 'red');
         } else {
             $('#status-e2').text(status_e2).css('color', 'green');
@@ -297,55 +300,19 @@ $(document).ready(function(){
         $('#status-e1').text("Ativo").css('color', 'green');
     }
 
-    function gerarDistribuicao(valores, tipo){
-
-        var result, a, b, c;
-
-        switch(tipo) {
-            case "constante":
-                return constante(valores[0].value);
-                break;
-            case "normal":
-                result = (valores[0].value).split(",");
-                var med = Number(result[0]);
-                var dp = Number(result[1]);
-                return normal (med, dp);
-                break;
-            case "uniforme":
-                result = (valores[0].value).split(",");
-                a = Number(result[0]);
-                b = Number(result[1]);
-                return uniforne(a, b);
-                break;
-            case "triangular":
-                result = (valores[0].value).split(",");
-                a = Number(result[0]);
-                b = Number(result[1]);
-                c = Number(result[2]);
-                return triangular(a, b, c);
-                break;
-            case "exponencial":
-                var lambda = Number((valores[0].value).split(","));
-                return exponencial(lambda);
-                break;
-            default:
-                return "erro";
-        }
-    }
-
     function verificaInputs() {
-        return !($('#input-tce').val() == '' ||
-        $('#input-ts').val() == '' ||
-        $('#input-tfalha').val() == '' ||
-        $('#input-falha').val() == '' ||
-        $('#duracao-simulacao').val() == '');
+        return $('#input-tce').val()
+            && $('#input-ts').val()
+            && $('#input-tfalha').val()
+            && $('#input-falha').val()
+            && $('#duracao-simulacao').val();
     }
 
-    function plotaDadosSimulacao(listaEventos_e1, listaEventos_e2, 
+    function plotaDadosSimulacao(listaEventos_e1, listaEventos_e2,
                                  listaEventoFalha_e1, listaEventoFalha_e2, contadorEntidade1, contadorEntidade2){
         gerarTabelaEquipamento1(listaEventos_e1);
         gerarTabelaEquipamento2(listaEventos_e2);
-        geradorEstatisticas(listaEventos_e1, listaEventos_e2, 
+        geradorEstatisticas(listaEventos_e1, listaEventos_e2,
             listaEventoFalha_e1, listaEventoFalha_e2, contadorEntidade1, contadorEntidade2);
     }
 });
