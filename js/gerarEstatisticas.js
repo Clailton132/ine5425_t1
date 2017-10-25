@@ -2,7 +2,7 @@
  * Created by Clailton on 18/10/2017.
  */
 
-function geradorEstatisticas(equipamento1, equipamento2, 
+function geradorEstatisticas(equipamento1, equipamento2,
                              listaEventoFalha_e1, listaEventoFalha_e2, contadorEntidade1, contadorEntidade2){
 
     //list:
@@ -63,18 +63,18 @@ function geradorEstatisticas(equipamento1, equipamento2,
     }
 
     //1 - Número Médio de Entidades nas Filas
-    var mediaEntidadeNaFila = entidadesEmFilaE1+ entidadesEmFilaE2/ equipamento1.length+ equipamento2.length;
+    var mediaEntidadeNaFila = (entidadesEmFilaE1 + entidadesEmFilaE2) / (equipamento1.length + equipamento2.length);
     $("#media-entidade-na-fila").text("Número Médio de Entidades nas Filas: "+mediaEntidadeNaFila.toFixed(2));
     //##################################################################################################################
 
     //2 - Taxa Média de Ocupação dos Servidores
-    var mediaEntidade = (equipamento1.length+equipamento2.length)/tempoEmHoras;
+    var mediaEntidade = (equipamento1.length + equipamento2.length) / tempoEmHoras;
     var taxaServicos = entidadesAtentidas/tempoEmHoras;
     //##################################################################################################################
 
     if(taxaServicos > mediaEntidade){
-        var taxaOcupacaoServidor = mediaEntidade/taxaServicos;
-        $('#taxa-media-ocupacao').text("Taxa Média de Ocupação do Servidor: "+taxaOcupacaoServidor+" minutos");
+        var taxaOcupacaoServidor = mediaEntidade / taxaServicos;
+        $('#taxa-media-ocupacao').text("Taxa Média de Ocupação do Servidor: " + taxaOcupacaoServidor + " minutos");
     } else {
         $('#taxa-media-ocupacao').text("Taxa Média de Ocupação do Servidor: Não Aplicavel");
     }
@@ -82,17 +82,17 @@ function geradorEstatisticas(equipamento1, equipamento2,
 
     //3 - Tempo Médio de uma Entidade na Fila
     mediaEmFila = mediaEmFila / (equipamento1.length + equipamento2.length);
-    $('#media-em-fila').text('Tempo Médio em Fila: '+mediaEmFila.toFixed(2)+" minutos");
+    $('#media-em-fila').text('Tempo Médio em Fila: ' + mediaEmFila.toFixed(2) + " minutos");
     //##################################################################################################################
 
     //4 - Tempo Médio no Sistema
-    tempoNoSistema = tempoNoSistema/(equipamento1.length + equipamento2.length);
-    $('#tempo-medio-sistema').text("Tempo médio despendido no sistema: "+tempoNoSistema.toFixed(2)+" minutos");
+    tempoNoSistema = tempoNoSistema / (equipamento1.length + equipamento2.length);
+    $('#tempo-medio-sistema').text("Tempo médio despendido no sistema: " + tempoNoSistema.toFixed(2) + " minutos");
     //##################################################################################################################
 
     //5 - Contador de Entidades
-    $('#numero-entidades-1').text("Número de entidades do tipo e1 geradas na simulação: "+equipamento1.length);
-    $('#numero-entidades-2').text("Número de entidades do tipo e2 geradas na simulação: "+equipamento2.length);
+    $('#numero-entidades-1').text("Número de entidades do tipo e1 geradas na simulação: " + equipamento1.length);
+    $('#numero-entidades-2').text("Número de entidades do tipo e2 geradas na simulação: " + equipamento2.length);
     //##################################################################################################################
 
     //6 - Falhas: Compute o tempo que cada um dos servidores permaneceu em falha;
