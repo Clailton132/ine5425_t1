@@ -7,9 +7,15 @@ $(document).ready(function(){
     var funcaoDistribuicao;
 
     $('#start').click(function(){
-        var timer = Number($("#duracao-simulacao").val()) * 60;
-        carregarFuncoes();
-        gerarEntidades(timer);
+        if(verificaInputs()){
+            $('#start').hide();
+            $( '#botoes-controle').show();  
+            var timer = Number($("#duracao-simulacao").val()) * 60;
+            carregarFuncoes();
+            gerarEntidades(timer);
+        } else {
+            alert("Preencha todos os campos!");
+        }
     });
 
     function carregarFuncoes() {
@@ -99,7 +105,7 @@ $(document).ready(function(){
                             $('#start').show();
                             $('#botoes-controle').hide();
                             plotaDadosSimulacao(listaEventos_e1, listaEventos_e2,
-                                listaEventoFalha_e1, listaEventoFalha_e2, contadorEntidade1, contadorEntidade2);
+                                listaEventoFalha_e1, listaEventoFalha_e2, contadorEntidade1, contadorEntidade2, timer);
                         }
                     }, Number(velocidade));
                 } else {
@@ -112,10 +118,8 @@ $(document).ready(function(){
                     $('#start').show();
                     $('#botoes-controle').hide();
                     plotaDadosSimulacao(listaEventos_e1, listaEventos_e2,
-                        listaEventoFalha_e1, listaEventoFalha_e2, contadorEntidade1, contadorEntidade2);
+                        listaEventoFalha_e1, listaEventoFalha_e2, contadorEntidade1, contadorEntidade2, timer);
                 }
-            } else {
-                alert("Preencha todos os campos!")
             }
         }
 
@@ -245,7 +249,7 @@ $(document).ready(function(){
 
         $('#stop').click(function(){
             plotaDadosSimulacao(listaEventos_e1, listaEventos_e2,
-                listaEventoFalha_e1, listaEventoFalha_e2, contadorEntidade1, contadorEntidade2);
+                listaEventoFalha_e1, listaEventoFalha_e2, contadorEntidade1, contadorEntidade2, timerAux);
             clearInterval(loopExecucao);
         });
 
@@ -309,10 +313,10 @@ $(document).ready(function(){
     }
 
     function plotaDadosSimulacao(listaEventos_e1, listaEventos_e2,
-                                 listaEventoFalha_e1, listaEventoFalha_e2, contadorEntidade1, contadorEntidade2){
+                                 listaEventoFalha_e1, listaEventoFalha_e2, contadorEntidade1, contadorEntidade2, timer){
         gerarTabelaEquipamento1(listaEventos_e1);
         gerarTabelaEquipamento2(listaEventos_e2);
         geradorEstatisticas(listaEventos_e1, listaEventos_e2,
-            listaEventoFalha_e1, listaEventoFalha_e2, contadorEntidade1, contadorEntidade2);
+            listaEventoFalha_e1, listaEventoFalha_e2, contadorEntidade1, contadorEntidade2, timer);
     }
 });

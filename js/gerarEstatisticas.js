@@ -3,7 +3,7 @@
  */
 
 function geradorEstatisticas(equipamento1, equipamento2,
-                             listaEventoFalha_e1, listaEventoFalha_e2, contadorEntidade1, contadorEntidade2){
+                             listaEventoFalha_e1, listaEventoFalha_e2, contadorEntidade1, contadorEntidade2, timer){
 
     //list:
     // 0 - entidade
@@ -25,6 +25,8 @@ function geradorEstatisticas(equipamento1, equipamento2,
     var mediaEmFila = 0;
     var tempoEmFalha_e1 = 0;
     var tempoEmFalha_e2 = 0;
+    var tempoLivre_e1 = 0;
+    var tempoLivre_e2 = 0;
     var i;
 
     for(i = 0; i < equipamento1.length ; i++){
@@ -40,9 +42,8 @@ function geradorEstatisticas(equipamento1, equipamento2,
 
         tempoNoSistema = tempoNoSistema + (equipamento1[i][3]+equipamento1[i][4]);
 
-        if(!isNaN(equipamento1[i][7])){
-            entidadesAtentidas++;
-        }
+        tempoLivre_e1 = tempoLivre_e1 + equipamento1[i][6];
+
     }
     for(i = 0; i < equipamento2.length; i++){
         //Conta quantas entidades ficaram em fila
@@ -57,8 +58,17 @@ function geradorEstatisticas(equipamento1, equipamento2,
 
         tempoNoSistema = tempoNoSistema + (equipamento2[i][3]+equipamento2[i][4]);
 
-        if(!isNaN(equipamento2[i][7])){
-            entidadesAtentidas++;
+        tempoLivre_e2 = tempoLivre_e2 + equipamento1[i][6];
+    }
+
+    for(i = 0; i < listaEventoFalha_e1.length; i++){
+        if(listaEventoFalha_e1[i].estado == "falha"){
+            tempoEmFalha_e1 = tempoEmFalha_e1 + listaEventoFalha_e1[i].duracaoFalha;
+        }
+    }
+    for(i = 0; i < listaEventoFalha_e2.length; i++){
+        if(listaEventoFalha_e2[i].estado == "falha"){
+            tempoEmFalha_e2 = tempoEmFalha_e1 + listaEventoFalha_e2[i].duracaoFalha;
         }
     }
 
@@ -68,21 +78,21 @@ function geradorEstatisticas(equipamento1, equipamento2,
     //##################################################################################################################
 
     //2 - Taxa Média de Ocupação dos Servidores
-    var mediaEntidade = (equipamento1.length + equipamento2.length) / tempoEmHoras;
-    var taxaServicos = entidadesAtentidas/tempoEmHoras;
-    //##################################################################################################################
+    var tempoTotal_e1 = timer - tempoEmFalha_e1;
+    var ocupacao_e1 = tempoTotal_e1 - tempoLivre_e1;
+    ocupacao_e1 = ((ocupacao_e1 / tempoTotal_e1)*100);
 
-    if(taxaServicos > mediaEntidade){
-        var taxaOcupacaoServidor = mediaEntidade / taxaServicos;
-        $('#taxa-media-ocupacao').text("Taxa Média de Ocupação do Servidor: " + taxaOcupacaoServidor + " minutos");
-    } else {
-        $('#taxa-media-ocupacao').text("Taxa Média de Ocupação do Servidor: Não Aplicavel");
-    }
+    var tempoTotal_e2 = timer - tempoEmFalha_e2;
+    var ocupacao_e2 = tempoTotal_e2 - tempoLivre_e2;
+    ocupacao_e2 = ((ocupacao_e2 / tempoTotal_e2)*100);
+
+    $('#taxa-media-ocupacao-1').text('Taxa média de ocupação: '+ocupacao_e1.toFixed(2)+"%");
+    $('#taxa-media-ocupacao-2').text('Taxa média de ocupação: '+ocupacao_e2.toFixed(2)+"%");
     //##################################################################################################################
 
     //3 - Tempo Médio de uma Entidade na Fila
     mediaEmFila = mediaEmFila / (equipamento1.length + equipamento2.length);
-    $('#media-em-fila').text('Tempo Médio em Fila: ' + mediaEmFila.toFixed(2) + " minutos");
+    $('#media-em-fila').text('Tempo Médio em Fila: ' + mediaEmFila.toFixed(2));
     //##################################################################################################################
 
     //4 - Tempo Médio no Sistema
@@ -96,16 +106,6 @@ function geradorEstatisticas(equipamento1, equipamento2,
     //##################################################################################################################
 
     //6 - Falhas: Compute o tempo que cada um dos servidores permaneceu em falha;
-    for(i = 0; i < listaEventoFalha_e1.length; i++){
-        if(listaEventoFalha_e1[i].estado == "falha"){
-            tempoEmFalha_e1 = tempoEmFalha_e1 + listaEventoFalha_e1[i].duracaoFalha;
-        }
-    }
-    for(i = 0; i < listaEventoFalha_e2.length; i++){
-        if(listaEventoFalha_e2[i].estado == "falha"){
-            tempoEmFalha_e2 = tempoEmFalha_e1 + listaEventoFalha_e2[i].duracaoFalha;
-        }
-    }
     $('#em-falha-1').text("Tempo total em falha do Equipamento 1: "+tempoEmFalha_e1+" minutos");
     $('#em-falha-2').text("Tempo total em falha do Equipamento 2: "+tempoEmFalha_e2+" minutos");
     //##################################################################################################################
